@@ -1,0 +1,35 @@
+BASIC-FUNCTION mass
+Mode 1 2
+1 1 -2 I 1 1
+2 1 -1 I 1 1
+Mode 2 2
+1 1 -2 I 1 1
+2 1 -1 I 1 1
+Mode 3 2
+1 1 -2 I 1 1
+2 1 -1 I 1 1
+Mode 4 7
+1 1 1 Cos 1 1
+2 1 1 Cot 1 1
+3 1 2 Cot 1 1
+4 1 1 Csc 1 1
+5 2 1 Cot 1 1 1 Csc 1 1
+6 1 2 Csc 1 1
+7 1 1 Sin 1 1
+Mode 5 7
+1 1 1 Cos 1 1
+2 1 1 Cot 1 1
+3 1 2 Cot 1 1
+4 1 1 Csc 1 1
+5 2 1 Cot 1 1 1 Csc 1 1
+6 1 2 Csc 1 1
+7 1 1 Sin 1 1
+Mode 6 7
+1 1 1 Cos 0.5 1
+2 1 2 Cos 0.5 1
+3 1 1 Cos 1 1
+4 1 1 Sin 0.5 1
+5 2 1 Cos 0.5 1 1 Sin 0.5 1
+6 1 2 Sin 0.5 1
+7 1 1 Sin 1 1
+END
