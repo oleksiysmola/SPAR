@@ -52,6 +52,8 @@ class basicFunction:
                     primitiveFunctionList += [lambda q, b=b, c=c, p=p: (b*(np.sin(q)-np.sin(c)))**p]
             case "exp":
                 primitiveFunctionList += [lambda q, b=b, c=c, p=p: np.exp(b*(q-c)**p)]
+            case "expmin":
+                primitiveFunctionList += [lambda q, b=b, c=c, p=p: np.exp(b*(min(-abs(np.pi - q) - (c-np.pi),0)**p))]
             case "tan":
                 primitiveFunctionList += [lambda q, b=b, c=c, p=p: np.tan(b*q**c)**p]
             case "sec":
@@ -88,6 +90,8 @@ class basicFunction:
                     primitiveFunctionList += [lambda q, b=b, c=c, p=p: (b*(np.sin(q)-np.sin(c)))**p]
                 case "exp":
                     primitiveFunctionList += [lambda q, b=b, c=c, p=p: np.exp(b*(q-c)**p)]
+                case "expmin":
+                    primitiveFunctionList += [lambda q, b=b, c=c, p=p: np.exp(b*(min(-abs(np.pi - q) - (c-np.pi),0)**p))]
                 case "tan":
                     primitiveFunctionList += [lambda q, b=b, c=c, p=p: np.tan(b*q**c)**p]
                 case "sec":
@@ -102,7 +106,7 @@ class basicFunction:
                     primitiveFunctionList += [lambda q, b=b, c=c, p=p: 1-np.tanh(b*(q-c)**p)]
                 case "i":
                     primitiveFunctionList += [lambda q, b=b, c=c, p=p: (b*q**c)**p]
-
+            startIndex += 4
         self.primitiveFunctionList = primitiveFunctionList
     
     def evaluate(self, q: float) -> float:
@@ -131,10 +135,10 @@ def readBasicFunctions(basicFunctionInput: str) -> dict:
     if "series" in basicFunctionMainHeader:
         for i in range(numberOfModes):
             modeFunctionList = {} # New list of functions for mode
-            modeFunctionList[0] = basicFunction("0 1 0 I 1 1") # Function 0 is always 1!
+            # modeFunctionList[0] = basicFunction("0 1 0 I 1 1") # Function 0 is always 1!
             numberOfLinesForMode: int = int(basicFunctionInputLines[modeHeaderIndex].split()[-1])
             lineBeingRead: int = 1
-            functionIndexCounter: int = 1
+            functionIndexCounter: int = 0
             while lineBeingRead <= numberOfLinesForMode:
                 basicFunctionInputLine: str = basicFunctionInputLines[modeHeaderIndex + lineBeingRead]
                 basicFunctionInputLineSplit: list = basicFunctionInputLine.split()
@@ -150,7 +154,7 @@ def readBasicFunctions(basicFunctionInput: str) -> dict:
                     else:
                         orderIndex = 4
                     maxOrder: int = int(basicFunctionInputLineSplit[orderIndex])
-                    for j in range(1, maxOrder+1):
+                    for j in range(maxOrder+1):
                         modeFunctionList[functionIndexCounter] = basicFunction(basicFunctionInputLine, True, j)
                         functionIndexCounter += 1
                 lineBeingRead += 1
@@ -216,20 +220,19 @@ class operatorMap:
         coefficients = self.componentCoefficients[component]
         functionIndices = self.functionIndices[component]
         numberOfTerms: int = len(coefficients)
+        terms = np.ones(numberOfTerms)
         match self.operatorRank:
             case 0:
-                operatorValue = 0.0
                 for i in range(numberOfTerms):
-                    newTerm = coefficients[i]
+                    terms[i] *= coefficients[i]
                     if self.containsMass:
-                        newTerm *= basicFunctionsList[0][functionIndices[i, 0]]
+                        terms[i] *= basicFunctionsList[0][functionIndices[i, 0]]
                         for j in range(1, self.containsMass + self.numberOfModes):
-                            newTerm *= basicFunctionsList[j][functionIndices[i, j]].evaluate(q[j])
+                            terms[i] *= basicFunctionsList[j][functionIndices[i, j]].evaluate(q[j])
                     else:
                         for j in range(self.numberOfModes):
-                            newTerm *= basicFunctionsList[j + 1][functionIndices[i, j]].evaluate(q[j])
-                    operatorValue += newTerm
-                return operatorValue
+                            terms[i] *= basicFunctionsList[j + 1][functionIndices[i, j]].evaluate(q[j])
+                return np.sum(terms)
             case 1:
                 operatorValue = np.zeros(3)
             case 2:
@@ -242,9 +245,3 @@ class operatorMap:
                         operatorValue = np.zeros((3, 3))
                     case "gcor":
                         operatorValue = np.zeros((self.numberOfModes, 3))
-
-# def readCheckpointFile(checkpointFileInput: str, containsMass: bool = False) -> dict:
-#     checkpointFileLineSplit: list =  checkpointFileInput.split("\n")
-#     operatorType: str = checkpointFileLineSplit[0].split()[-1].lower()
-#     rankOfComponent: int = componentRankMapping[operatorType]
-#     pass
