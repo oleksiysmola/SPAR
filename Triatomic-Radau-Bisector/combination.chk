@@ -1,12 +1,12 @@
 BASIC-FUNCTION
 Mode 1 1
-1 1 -2 q-q0 1 1
+1 1 q-q0 -2 1 1
 Mode 2 1
-1 1 -2 q-q0 1 1
+1 1 q-q0 -2 1 1
 Mode 3 5
-1 1 2 Csc 0.5 1
-2 1 2 Csc 1 1
-3 2 1 Cos 2 1 2 Csc 1 1
-4 2 1 Csc 0.5 1 1 Sec 0.5 1
-5 1 2 Sec 0.5 1
+1 1 Csc 2 0.5 1
+2 1 Csc 2 1 1
+3 2 Cos 1 2 1 2 Csc 1 1
+4 2 Csc 1 0.5 1 1 Sec 0.5 1
+5 1 Sec 2 0.5 1
 END
