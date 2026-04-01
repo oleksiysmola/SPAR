@@ -3,7 +3,7 @@ import numpy as np
 toRadians = np.pi/180
 wavenumberConversion = 33.7152537836138732499014581824370 # conversion factor to cm-1
 # Case of H2S
-masses = np.array([31.9720707, 1.00782503223])
+masses = np.array([31.9720707, 1.00782503223, 1.00782503223])
 qVector = np.array([1.336, 1.336, 92.110*toRadians])
 numberOfModes = len(qVector)
 
@@ -20,7 +20,7 @@ basicFunctionsInputLines = basicFunctionsInput.split("\nEND")[0].split("\n")
 basicFunctionsInputLines = basicFunctionsInputLines[1:]
 
 elementaryFunctionMap = {
-    "I": lambda x : x,
+    "R": lambda x : x,
     "COS": np.cos,
     "SIN": np.sin,
     "TAN": np.tan,
@@ -35,18 +35,18 @@ def basicFunctionTemplate(basicFunctionLine: str):
     function f_p_k.'''
     basicFunctionLineSplit = basicFunctionLine.split()
     if basicFunctionLineSplit[1] == "2":
-        n1 = float(basicFunctionLineSplit[2])
-        f1 = elementaryFunctionMap[basicFunctionLineSplit[3].upper()]
+        f1 = elementaryFunctionMap[basicFunctionLineSplit[2].upper()]
+        n1 = float(basicFunctionLineSplit[3])
         a1 = float(basicFunctionLineSplit[4])
         k1 = float(basicFunctionLineSplit[5])
-        n2 = float(basicFunctionLineSplit[6])
-        f2 = elementaryFunctionMap[basicFunctionLineSplit[7].upper()]
+        f2 = elementaryFunctionMap[basicFunctionLineSplit[6].upper()]
+        n2 = float(basicFunctionLineSplit[7])
         a2 = float(basicFunctionLineSplit[8])
         k2 = float(basicFunctionLineSplit[9])
         return lambda q : f1(a1*q**k1)**n1*f2(a2*q**k2)**n2
     else:
-        n1 = float(basicFunctionLineSplit[2])
-        f1 = elementaryFunctionMap[basicFunctionLineSplit[3].upper()]
+        f1 = elementaryFunctionMap[basicFunctionLineSplit[2].upper()]
+        n1 = float(basicFunctionLineSplit[3])
         a1 = float(basicFunctionLineSplit[4])
         k1 = float(basicFunctionLineSplit[5])
         return lambda q : f1(a1*q**k1)**n1
